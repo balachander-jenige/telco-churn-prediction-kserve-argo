@@ -1,0 +1,28 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: rewrite-predict
+  namespace: ml
+spec:
+  replacePath:
+    path: /v1/models/churn-predictor:predict
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: churn-predictor-ingress
+  namespace: ml
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: ml-rewrite-predict@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+    - http:
+        paths:
+          - path: /predict
+            pathType: Exact
+            backend:
+              service:
+                name: churn-predictor-predictor
+                port:
+                  number: 80

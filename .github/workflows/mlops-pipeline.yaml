@@ -17,6 +17,9 @@ jobs:
     steps:
      # Use built-in token
     
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -41,7 +44,7 @@ jobs:
     
     - name: Push model to S3 directly
       run: |
-        aws s3 cp models/churn_model.pkl s3://churn-prediction-model-dvc/models/churn_model.pkl
+        aws s3 cp models/churn_model.pkl s3://churn-prediction-model-dvc/models/
         echo "Model pushed to S3 is success"
     
     - name: Update inference.yaml with S3 model path
