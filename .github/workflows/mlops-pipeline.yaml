@@ -7,7 +7,6 @@ on:
 env:
   AWS_REGION: ap-southeast-1
   S3_Bucket: churn-prediction-model-dvc
-
 jobs:
   train-and-deploy:
     runs-on: ubuntu-latest
