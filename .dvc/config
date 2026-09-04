@@ -1,4 +1,4 @@
 [core]
-    remote = s3remote
-['remote "s3remote"']
+    remote = s3churnremote
+['remote "s3churnremote"']
     url = s3://churn-prediction-model-dvc
