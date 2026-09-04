@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 env:
-  AWS_Region: ap-southeast-1
+  AWS_REGION: ap-southeast-1
   S3_Bucket: churn-prediction-model-dvc
 
 jobs:
@@ -36,20 +36,25 @@ jobs:
       run: python train.py
     
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Verify AWS identity and bucket access
+      run: |
+        aws sts get-caller-identity
+        aws s3api head-bucket --bucket "$S3_Bucket"
     
     - name: Push model to S3 directly
       run: |
-        aws s3 cp models/churn_model.pkl s3://churn-prediction-model-dvc/models/
-        echo "Model pushed to S3 is success"
+        aws s3 cp models/churn_model.pkl "s3://$S3_Bucket/models/churn_model.pkl"
+        echo "Model pushed to S3 successfully"
     
     - name: Update inference.yaml with S3 model path
       run: |
-        MODEL_URI="s3://churn-prediction-model-dvc/models/churn_model.pkl"
+        MODEL_URI="s3://$S3_Bucket/models/churn_model.pkl"
         sed -i "s|storageUri: .*|storageUri: $MODEL_URI|g" k8s/inference.yaml
     
     - name: Commit updated inference.yaml
