@@ -2,6 +2,10 @@
 
 This guide shows how to generate data, train the churn model, upload it to S3 with DVC, and deploy it on EKS with KServe and Traefik.
 
+## Project Overview
+
+This project demonstrates an end-to-end, production-oriented MLOps workflow for customer churn prediction. It covers data generation and model training, experiment and model artifact tracking with DVC and Amazon S3, secure model retrieval with AWS IAM and IRSA, model serving with KServe on Kubernetes/EKS, and external API access through Traefik. Argo CD provides the GitOps workflow by continuously synchronizing the Kubernetes deployment from Git, making model delivery repeatable, auditable, and easier to operate.
+
 ## POC Screenshots
 
 The screenshots below show the completed proof of concept:
